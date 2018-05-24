@@ -15,32 +15,31 @@ ENV \
 
 RUN cat /etc/apt/sources.list
 
+ENV TZ 'Etc/UTC'
+RUN echo $TZ > /etc/timezone \
+    && apt-get -yq update \
+    && apt-get install -yq tzdata locales \
+    && rm /etc/localtime \
+    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && dpkg-reconfigure -f noninteractive tzdata \
+    && locale-gen en_GB.utf8
+
+ENV LANG en_GB.utf8
+ENV LANGUAGE en_GB.utf8
+ENV LC_ALL en_GB.utf8
+
 # This is the list of basic dependencies that all language Docker images can consume.
-RUN INSTALL_PKGS="build-essential \
-bzip2 \
-git \
-libcurl4-gnutls-dev \
-libxml2-dev \
-libxslt1-dev \
-libgnutls28-dev \
-gnupg \
-patch \
-procps \
-tar \
-unzip \
-wget \
-zlib1g-dev" && \
-export DEBIAN_FRONTEND=noninteractive && \
-apt-get -yq update && \
-apt-get -yq install $INSTALL_PKGS && \
-apt-get clean
+RUN export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -yq update \
+    && apt-get -yq install build-essential bzip2 git libcurl4-gnutls-dev libxml2-dev libxslt1-dev libgnutls28-dev gnupg patch procps tar unzip wget zlib1g-dev \
+    && apt-get clean
 
 # Setup the 'openshift' user that is used for build execution and for the
 # application runtime execution.
 RUN useradd -u 1001 -r -g 0 -d ${HOME} -s /sbin/nologin \
--c "Default Application User" default && \
-mkdir -p /opt/app-root && \
-chown -R 1001:0 /opt/app-root
+-c "Default Application User" default \
+&& mkdir -p /opt/app-root \
+&& chown -R 1001:0 /opt/app-root
 
 # Copy executable utilities.
 COPY bin/ /usr/bin/
