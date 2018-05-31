@@ -1,5 +1,5 @@
 
-IMAGE_NAME = s2i-base-ubuntu16.04
+IMAGE_NAME = s2i-ubuntu-laravel5x
 
 build:
 	docker build -t $(IMAGE_NAME) .
