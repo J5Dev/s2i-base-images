@@ -1,0 +1,1 @@
+# S2i Ubuntu Laravel 5.x builder image
