@@ -1,27 +1,10 @@
-# Ubuntu S2I Base Docker Image
+# Base Images for use with S2i/Openshift
 
-This repository contains a Dockerfile that serves as the base image with all essential libraries and tools needed for OpenShift language images.
+Collection of images to be used as either base images, or builder images for applications being deployed on the Openshift platform.
 
-## Installation and Usage
+## Usage
 
-This image is available on DockerHub. To pull the latest image (18.04), run:
+Images are available to be pulled from docker, or can be built manually: for a more in-depth set of instructions see each images respective docs:
 
-```
-docker pull j5dev/s2i-base-ubuntu18.04
-```
-
-To build the base image for 18.04 from scratch, run:
-
-```
-cd s2i-base-ubuntu/18.04
-make build
-```
-
-## Test
-
-This repository includes the S2I test framework, which launches a simple test to make sure the image builds and runs properly.
-
-```
-cd s2i-base-ubuntu/18.04
-make test
-```
+* [Ubuntu 18.04]('ubuntu18.04/readme.md')
+* [Ubuntu Laravel]('ubuntu-laravel-5x/readme.md')
