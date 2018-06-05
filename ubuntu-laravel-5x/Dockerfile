@@ -36,7 +36,7 @@ RUN apt-get install -y nginx curl zip wget gnupg unzip git software-properties-c
     mkdir /run/php && \
     curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh && \
     bash nodesource_setup.sh && \
-    apt-get install -y nodejs  build-essential && \
+    apt-get install -y nodejs  build-essential libpng-dev && \
     apt-get remove -y --purge software-properties-common && \
     apt-get -y autoremove && \
     apt-get clean && \
@@ -55,6 +55,9 @@ RUN useradd -u 1001 -r -g 0 -d ${HOME} -s /sbin/nologin \
 -c "Default Application User" default \
 && mkdir -p /opt/app-root \
 && chown -R 1001:0 /opt/app-root
+
+# Copy the S2I scripts to /usr/libexec/s2i since we set the label that way
+COPY ./.s2i/bin/ $STI_SCRIPTS_PATH
 
 # Copy executable utilities.
 COPY bin/ /usr/bin/

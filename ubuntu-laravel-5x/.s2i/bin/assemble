@@ -27,4 +27,3 @@ echo "---> Building required dependencies and processing assets"
 composer install
 npm install
 npm run production
-php artisan migrate --force
