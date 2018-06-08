@@ -2,6 +2,11 @@ FROM ubuntu:18.04
 MAINTAINER Chris Gooding <chris.j5dev@gmail.com>
 
 LABEL \
+      name="J5Dev/s2i-ubuntu-laravel5x" \
+      maintainer="chris.j5dev@gmail.com" \
+      summary="S2i base builder image build on Ubuntu 18.04" \
+      description="Image designed to be used as an s2i builder image specifically for Laravel 5 apps. Includes: NGinx, PHP-FPM, Composer and NPM" \
+      io.openshift.tags="s2i-ubuntu-laravel5x,ubuntu,nginx,php-fpm,laravel" \
       # Location of the STI scripts inside the image.
       io.openshift.s2i.scripts-url=image:///usr/libexec/s2i
 
@@ -21,17 +26,21 @@ RUN echo $TZ > /etc/timezone && \
     rm /etc/localtime && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata && \
-    locale-gen en_GB.utf8
+    locale-gen en_GB.utf8 && \
+    apt-get -y autoremove && \
+    apt-get clean
 
 ENV LANG en_GB.utf8
 ENV LANGUAGE en_GB.utf8
 ENV LC_ALL en_GB.utf8
 
-RUN apt-get install -y nginx curl zip wget gnupg unzip git software-properties-common supervisor sqlite3 && \
+RUN apt-get install -y curl zip wget gnupg unzip git software-properties-common supervisor sqlite3 && \
     add-apt-repository -y ppa:ondrej/php && \
+    add-apt-repository -y ppa:nginx/stable && \
     apt-get install -y php7.1-fpm php7.1-cli php7.1-mcrypt php7.1-gd php7.1-mysql \
                           php7.1-imap php-memcached php7.1-mbstring php7.1-xml php7.1-curl \
                           php7.1-sqlite3 php7.1-xdebug && \
+    apt-get install -y nginx && \
     php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer && \
     mkdir /run/php && \
     curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh && \
@@ -70,6 +79,7 @@ RUN mkdir /tmp/sessions && \
     mkdir -p /var/cache/nginx && \
     touch /var/log/nginx/error.log && \
     touch /var/log/nginx/access.log && \
+    chown -R 1001:0 /var/run/php && \
     chown -R 1001:0 /var/log/nginx && \
     chown -R 1001:0 /var/lib/nginx && \
     chown -R 1001:0 /opt/app-root /tmp/sessions && \
