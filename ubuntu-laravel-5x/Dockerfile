@@ -6,8 +6,8 @@ LABEL \
       io.openshift.s2i.scripts-url=image:///usr/libexec/s2i
 
 ENV \
-    PHP_VERSION=7.1 \
-    PHP_VER_SHORT=71 \
+    PHP_VERSION=7.2 \
+    PHP_VER_SHORT=72 \
     # Path to be used in other layers to place s2i scripts into
     STI_SCRIPTS_PATH=/usr/libexec/s2i \
     # The $HOME is not set by default, but some applications needs this variable
@@ -27,23 +27,24 @@ ENV LANG en_GB.utf8
 ENV LANGUAGE en_GB.utf8
 ENV LC_ALL en_GB.utf8
 
+RUN apt-get update -y
 RUN apt-get install -y nginx curl zip wget gnupg unzip git software-properties-common supervisor sqlite3 && \
     add-apt-repository -y ppa:ondrej/php && \
-    apt-get install -y php7.1-fpm php7.1-cli php7.1-mcrypt php7.1-gd php7.1-mysql \
-                          php7.1-imap php-memcached php7.1-mbstring php7.1-xml php7.1-curl \
-                          php7.1-sqlite3 php7.1-xdebug && \
+    apt-get -yq update && \
+    apt-get install -y php7.2-fpm php7.2-cli php7.2-gd php7.2-mysql \
+                          php7.2-imap php-memcached php7.2-mbstring php7.2-xml php7.2-curl \
+                          php7.2-sqlite3 php7.2-xdebug && \
     php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer && \
     mkdir /run/php && \
     curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh && \
     bash nodesource_setup.sh && \
     apt-get install -y nodejs  build-essential && \
-    apt-get remove -y --purge software-properties-common && \
     apt-get -y autoremove && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm -rf /tmp/* /var/tmp/*
 
 COPY ./configs/nginx /etc/nginx/
-COPY ./configs/php-fpm /etc/php/7.1/fpm/
+COPY ./configs/php-fpm /etc/php/7.2/fpm/
 COPY ./configs/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8080
