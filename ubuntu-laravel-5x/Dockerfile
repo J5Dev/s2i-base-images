@@ -27,6 +27,7 @@ ENV LANG en_GB.utf8
 ENV LANGUAGE en_GB.utf8
 ENV LC_ALL en_GB.utf8
 
+RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get update -y
 RUN apt-get install -y nginx curl zip wget gnupg unzip git software-properties-common supervisor sqlite3 && \
     add-apt-repository -y ppa:ondrej/php && \
@@ -38,6 +39,7 @@ RUN apt-get install -y nginx curl zip wget gnupg unzip git software-properties-c
     mkdir /run/php && \
     curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh && \
     bash nodesource_setup.sh && \
+    apt-get -yq update && \
     apt-get install -y nodejs  build-essential && \
     apt-get -y autoremove && \
     apt-get clean && \
