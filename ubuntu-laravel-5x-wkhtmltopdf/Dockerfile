@@ -6,8 +6,8 @@ USER root
 
 RUN apt-add-repository -y "deb http://security.ubuntu.com/ubuntu xenial-security main" && \
     apt-get -yq update && \
-    apt-get install -y libxrender1 libfontconfig1 libx11-dev libjpeg62 libxtst6 \
-                           fontconfig xfonts-75dpi xfonts-base libpng12-0 php-zip php-xml php-gd  && \
+    export DEBIAN_FRONTEND=noninteractive ; apt-get install -y -o Dpkg::Options::="--force-confnew" libxrender1 libfontconfig1 libx11-dev libjpeg62 libxtst6 \
+                           fontconfig xfonts-75dpi xfonts-base libpng12-0 php7.2-zip php7.2-xml php7.2-gd  && \
     wget "https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.xenial_amd64.deb" && \
     dpkg -i wkhtmltox_0.12.5-1.xenial_amd64.deb && \
     apt-get -f install && \
